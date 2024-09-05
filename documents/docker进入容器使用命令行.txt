@@ -1,0 +1,20 @@
+docker pull registry.cn-shanghai.aliyuncs.com/tcc-public/pytorch:2.1-cuda12.2-devel-ubuntu22.04
+docker run --gpus all --name models -it registry.cn-shanghai.aliyuncs.com/tcc-public/pytorch:2.1-cuda12.2-devel-ubuntu22.04 /bin/bash
+
+apt update
+apt upgrade
+apt install wget
+apt install vim
+
+ls
+mkdir /app
+cd /app
+
+wget https://repo.anaconda.com/miniconda/Miniconda3-py312_24.7.1-0-Linux-x86_64.sh
+bash Miniconda3-py312_24.7.1-0-Linux-x86_64.sh -b -p /app/miniconda3
+/app/miniconda3/bin/conda init bash
+bash
+
+conda create -n nnunet python=3.11
+conda activate nnunet
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
