@@ -1,15 +1,21 @@
 # DiMTAIC 2024
 
-## model
+## models
 
 ### PretrainClassifi
 
-ResNET50预训练分割模型
+ResNet50预训练分类模型
+
+### MaskRCNN
+
+基于ResNet50和coco数据集的预训练分割模型
 
 
 
+## 提交策略
 
-
+1. PretrainClassifi分类 + nnUNet分割
+2. MaskRCNN分类 + 分割
 
 
 

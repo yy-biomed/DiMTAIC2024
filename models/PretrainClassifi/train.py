@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torchvision import models
 from torch.utils.data import DataLoader
 from pathlib import Path
 import pandas as pd
@@ -8,23 +7,7 @@ import random
 import shutil
 
 from loader import ClassDataset
-
-
-####
-def get_resnet50(n, weights_path=None):
-    resnet = models.resnet50()
-    if weights_path is not None:
-        resnet.load_state_dict(torch.load(weights_path, weights_only=True))
-    for parameter in resnet.parameters():
-        parameter.requires_grad = False
-    cin = resnet.fc.in_features
-    resnet.fc = nn.Sequential(
-        nn.Linear(cin, 1024, bias=False),
-        nn.ReLU(inplace=True),
-        nn.Linear(1024, n, bias=False)
-    )
-
-    return resnet
+from model import get_resnet50
 
 
 ####
@@ -85,7 +68,8 @@ if __name__ == '__main__':
 
     # n_epoch = (50, 50)
     n_epoch = (10, 10)  # 测试时使用10+10
-    batch_size = 64
+    # batch_size = 64
+    batch_size = 16  # 测试时使用16
     n_worker = 4
     ############################################################################
 
@@ -134,12 +118,13 @@ if __name__ == '__main__':
 
     for param in classifi_model.parameters():
         param.requires_grad = True
+    optim = torch.optim.Adam(classifi_model.parameters(), lr=1e-4)  # 降低学习率
     val_loss_all_1 = {}
     for t in range(n_epoch[1]):
         print(f"Epoch {t + 1}\n-------------------------------")
         train(train_loader, classifi_model, loss_func, optim, using_device)
         val_loss, _ = valid(valid_loader, classifi_model, loss_func, using_device)
-        val_loss_all_0['%s/00/epoch_%.3d.pth' % (log_dir, t)] = val_loss
+        val_loss_all_0['%s/01/epoch_%.3d.pth' % (log_dir, t)] = val_loss
         torch.save(classifi_model.state_dict(), '%s/01/epoch_%.3d.pth' % (log_dir, t))
 
     best_weight = min(val_loss_all_1, key=lambda k: val_loss_all_1[k])

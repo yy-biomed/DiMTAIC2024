@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from pathlib import Path
 import pandas as pd
 
-import train
+from model import get_resnet50
 
 
 def infer(model, img_dir, img_shape, device):
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     using_device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    classifi_model = train.get_resnet50(3)
+    classifi_model = get_resnet50(n_class)
     classifi_model.load_state_dict(torch.load('%s/best.pth' % log_dir, weights_only=True))
     classifi_model.to(using_device)
 

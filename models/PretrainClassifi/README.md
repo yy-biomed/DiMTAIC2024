@@ -4,7 +4,7 @@
 
 使用Resnet50在Imagenet上的预训练权重，替换原有全连接层
 
-前50 epoch锁定除全连接层外全部权重，后50 epoch解除锁定，进行微调
+前50 epoch锁定除全连接层外全部权重，后50 epoch解除锁定，进行微调，同时学习率降低至1e-4
 
 构建DataLoader时对数据进行增强，详见loader.py
 
@@ -26,7 +26,7 @@
 * 开始训练：
 
   ```shell
-  python train.py
+  python model.py
   ```
 
 ## 推理 infer.py
