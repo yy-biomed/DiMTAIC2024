@@ -25,10 +25,10 @@ class MaskDataset(Dataset):
         self.img_dir = '%s/img/' % data_path
         self.mask_dir = '%s/label/' % data_path
         self.get_masks_and_boxes = get_masks_and_boxes
-        # self.shape_aug = v2.Compose([
-        # ])
-        # self.image_aug = v2.Compose([
-        # ])
+        self.shape_aug = v2.Compose([
+        ])
+        self.image_aug = v2.Compose([
+        ])
 
     def __len__(self):
         return len(self.cases)
@@ -39,10 +39,10 @@ class MaskDataset(Dataset):
 
         img = v2.ToDtype(torch.float32, scale=True)((read_image(img_path)))  # [3, H, W], 0-1
         mask = read_image(mask_path, ImageReadMode.GRAY)  # [H, W], 0/255
-        # if self.train:
-        #     img = self.shape_aug(img)
-        #     img = self.image_aug(img)
-        #     mask = self.shape_aug(mask)
+        if self.train:
+            img = self.shape_aug(img)
+            img = self.image_aug(img)
+            mask = self.shape_aug(mask)
 
         masks, boxes = self.get_masks_and_boxes(mask)
         label = self.labels[self.labels.iloc[:, 0] == self.cases[idx]].iloc[0, 1]
